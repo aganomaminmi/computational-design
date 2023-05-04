@@ -1,0 +1,21 @@
+%!
+
+/xpos 0 def
+
+newpath
+0.5 setgray
+% rand 0.5 mul 0.5 add setgray
+0.5 setlinewidth
+
+% /setcolor {
+%   rand 3 array astore setrgbcolor
+% } def
+
+200 {
+  xpos 0 moveto
+  rand 600 mod 700 lineto
+  /xpos xpos 3 add def
+} repeat
+
+stroke
+showpage

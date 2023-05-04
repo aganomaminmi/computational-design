@@ -1,0 +1,24 @@
+%!
+newpath
+
+/width 5 def
+/grayValue 1 def
+
+/setColor {
+  /r 0.0 1.0 rand def
+  /g 0.0 1.0 rand def
+  /b 0.0 1.0 rand def
+  r g b setrgbcolor
+}
+
+500 {
+  width setlinewidth
+  grayValue setgray
+  rand 600 mod 0 moveto
+  rand 600 mod 700 lineto
+  stroke
+  /width width 0.01 sub def
+  /grayValue grayValue 0.0015 sub def
+} repeat
+
+showpage

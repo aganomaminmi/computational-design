@@ -1,0 +1,27 @@
+%!
+
+/Helvetica-BoldOblique findfont 30 scalefont setfont
+
+/circle {
+  newpath
+  0 0 moveto
+  100 100 translate
+
+  0 10 360 {
+    gsave % 描画を保存
+    rotate
+    0 0 moveto
+    (I Love PostScript) true charpath
+    stroke
+    grestore % 描画を再表示
+  } for
+} def
+
+50 50 translate
+circle
+100 100 translate
+circle
+50 10 translate
+circle
+
+showpage

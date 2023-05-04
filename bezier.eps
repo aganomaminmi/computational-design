@@ -1,0 +1,32 @@
+%!PS-Adobe-3.1 EPSF-3.0
+%%BoundingBox: 0 0 300 300
+
+/p1x 80 def
+/p1y 250 def
+
+/p2x 250 def
+/p2y 250 def
+
+/p3x 300 def
+/p3y 0 def
+
+newpath
+
+0 0 moveto
+0.5 setgray
+1 setlinewidth
+
+
+p1x p1y lineto
+p2x p2y lineto
+p3x p3y lineto
+
+stroke
+
+0 0.5 1 setrgbcolor
+3 setlinewidth
+0 0 moveto
+p1x p1y p2x p2y p3x p3y curveto
+
+stroke
+showpage

@@ -1,0 +1,15 @@
+%!
+
+newpath
+
+/width 0.1 def
+0.5 setgray
+200 {
+  width setlinewidth
+  rand 600 mod 0 moveto
+  rand 600 mod 700 lineto
+  stroke
+  /width width 0.01 add def
+} repeat
+
+showpage
