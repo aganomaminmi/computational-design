@@ -1,0 +1,19 @@
+%!
+
+40 setlinewidth
+
+newpath
+
+/a { 150 600 } def % 開始点
+/b { 200 600 } def % 制御点
+/c { 200 600 } def % 制御点
+/d { 200 200 } def % 終了点
+
+a moveto
+b c d curveto
+stroke
+
+280 300 80 0 360 arc
+stroke
+
+showpage

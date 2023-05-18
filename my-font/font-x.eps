@@ -1,0 +1,27 @@
+%!
+
+40 setlinewidth
+
+newpath
+
+
+/a { 200 400 } def
+/b { 300 400 } def
+/c { 300 200 } def
+/d { 400 200 } def
+
+a moveto
+b c d curveto
+stroke
+
+/e { 400 400 } def
+/f { 300 400 } def
+/g { 300 200 } def
+/h { 200 200 } def
+
+e moveto
+f g h curveto
+
+stroke
+
+showpage
