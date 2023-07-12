@@ -9,10 +9,8 @@ const m = 4
 
 type Grid = { u: number, v: number }
 
-const grids: Grid[][] = new Array<Grid[]>(n + 2).fill(new Array<Grid>(n + 2).fill({ u: 1, v: 0 }))
-const next: Grid[][] = new Array<Grid[]>(n + 2).fill(new Array<Grid>(n + 2).fill({ u: 1, v: 0 }))
-
-
+const grids: Grid[][] = Array.from({ length: n + 2 }, () => Array.from({ length: n + 2 }, () => ({ u: 1, v: 0 })));
+const next: Grid[][] = Array.from({ length: n + 2 }, () => Array.from({ length: n + 2 }, () => ({ u: 1, v: 0 })));
 
 const dt = 3.0;
 const h = 0.2;
@@ -26,7 +24,8 @@ export const sketch = (p: p5) => {
   p.setup = () => {
     // p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL)
     const canvas = m * n
-    p.createCanvas(canvas, canvas, p.WEBGL)
+    p.createCanvas(canvas, canvas)
+    p.background("#FFCC00")
     p.noStroke()
     // mic = new p5.AudioIn()
     // mic.start()
@@ -43,7 +42,7 @@ export const sketch = (p: p5) => {
     for (let x = 1; x <= n; x++) {
       for (let y = 1; y <= n; y++) {
         const { u, v } = grids[x][y]
-        p.fill(u*255, 100, v*255);
+        p.fill(u * 255, 100, v * 255);
         // p.fill(255 - (v[i][j] - u[i][j] / 2 + 0.5) * 100, 255, 255);
         p.rect((x - 1) * m, (y - 1) * m, m, m);
       }
