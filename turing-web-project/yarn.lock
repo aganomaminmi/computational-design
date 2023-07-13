@@ -704,6 +704,11 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
+fft@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/fft/-/fft-0.2.1.tgz#1044554fdba1a0b96c4843d5dea8525cab3621aa"
+  integrity sha512-EsN8Cqlf6OMdlbSuTDEBBTTCp2OaNNGrI0ltSrfsZeOu8sPFsemOVSlRYaGlFLdTTvHm1hfMSaS77jccDaNA0A==
+
 file-entry-cache@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-6.0.1.tgz#211b2dd9659cb0394b073e7323ac3c933d522027"

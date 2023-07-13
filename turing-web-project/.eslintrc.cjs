@@ -18,6 +18,8 @@ module.exports = {
   },
   plugins: ['react-refresh'],
   rules: {
+    'semi': ['error', 'never'],
+    'quotes': ['error', 'single'],
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
