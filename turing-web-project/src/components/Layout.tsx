@@ -26,7 +26,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
           }}
         >
           <a
-            href="/music/one_more_time"
+            href="/music/one-more-time"
             style={{
               padding: '8px 12px',
               borderBottom: '1px solid white',
@@ -36,7 +36,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
             One More Time
           </a>
           <a
-            href="/music/digital_love"
+            href="/music/digital-love"
             style={{
               padding: '8px 12px',
               borderBottom: '1px solid white',
@@ -44,6 +44,46 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
             }}
           >
             Digital Love
+          </a>
+          <a
+            href="/music/voyager"
+            style={{
+              padding: '8px 12px',
+              borderBottom: '1px solid white',
+              color: 'white',
+            }}
+          >
+            Voyager
+          </a>
+          <a
+            href="/music/something-about-us"
+            style={{
+              padding: '8px 12px',
+              borderBottom: '1px solid white',
+              color: 'white',
+            }}
+          >
+            Something about us
+          </a>
+          <a
+            href="/music/face-to-face"
+            style={{
+              padding: '8px 12px',
+              borderBottom: '1px solid white',
+              color: 'white',
+            }}
+          >
+            Face to face
+          </a>
+          <a
+            href="/music/planet-loop"
+            style={{
+              padding: '8px 12px',
+              borderBottom: '1px solid white',
+              color: 'white',
+            }}
+          >
+            Planet loop
           </a>
         </div>
       )}

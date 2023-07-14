@@ -16,7 +16,7 @@ export const DigitalLove = () => {
     } else {
       return
     }
-    new p5(sketch('/music-resource/degital_love.m4a'), target.current)
+    new p5(sketch('/music-resource/digital_love.m4a'), target.current)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
