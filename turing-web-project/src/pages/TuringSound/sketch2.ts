@@ -1,3 +1,4 @@
+import { BeatDetect } from '@/libs/beat-detect'
 import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
@@ -7,6 +8,7 @@ let playButton: p5.Element
 let fft: p5.FFT // FFTオブジェクト
 let sound: p5.SoundFile
 const sliderWidth = 100
+let kickDetector: BeatDetect
 
 const n = 100
 const m = 4
@@ -30,101 +32,99 @@ let b = 0.078
 const Cu = 0.002
 const Cv = 0.001
 
-export const sketch = (p: p5) => {
-  const levelHistory = Array.from({ length: 10 }, () => 0)
+const canvas = m * n
 
+
+export const sketch = (p: p5) => {
   p.setup = () => {
-    // p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL)
-    const canvas = m * n
     p.createCanvas(canvas, canvas)
     p.background('#FFCC00')
     p.noStroke()
 
-    playButton = p.createButton('Play') // 再生ボタンの定義
-    playButton.size(100, 50)         // 再生ボタンの大きさを設定
-    playButton.position(100, 20)    // 再生ボタンの位置を設定
+    playButton = p.createButton('Play')
+    playButton.position(p.windowWidth - 80, p.windowHeight - 44)
     playButton.style('background-color', p.color(30))
-    playButton.style('color', p.color(200))   // 再生ボタンの背景の色を設定
-    playButton.mousePressed(() => { sound.loop() })// 再生ボタンを押した時の関数を設定
+    playButton.style('font', '18px')
+    playButton.style('border', 'none')
+    playButton.style('border-radius', '20px')
+    playButton.style('padding', '8px 16px')
+    playButton.style('z-index', '9999')
+    playButton.style('color', p.color(200))
+    playButton.mousePressed(() => {
+      togglePlay()
+    })
 
-    volumeSlider = p.createSlider(0, sliderWidth, sliderWidth / 2) // 音量のバーを設定
-    volumeSlider.position(250, 50) // 音量のバーの位置を設定
+    volumeSlider = p.createSlider(0, sliderWidth, sliderWidth / 2)
+    volumeSlider.position(p.windowWidth - 150, p.windowHeight - 130)
 
-    speedSlider = p.createSlider(0, sliderWidth, sliderWidth / 2) // 再生速度のバーを設定
-    speedSlider.position(400, 50) // 再生速度のバーの位置を設定
+    speedSlider = p.createSlider(0, sliderWidth, sliderWidth / 2)
+    speedSlider.position(p.windowWidth - 150, p.windowHeight - 100)
 
-    fft = new p5.FFT() // FFTを設定
+
+    fft = new p5.FFT()
+
+    kickDetector = new BeatDetect('kick')
   }
+
 
   p.draw = () => {
     display() //描画処理
     boundary() // 境界条件の処理
     update() // 描画に関わらない処理
-    updateParams()
     fftDo()
   }
 
   const fftDo = () => {
-    const spectrum = fft.analyze() as number[]
+    fft.analyze()
 
-    const low = spectrum.slice(0, 300)
-    const high = spectrum.slice(300, spectrum.length)
+    const low = fft.getEnergy(10, 300)
+    const high = fft.getEnergy(300, 20000)
 
-    const lowLevel = low.reduce((pre, cur) => pre + cur, 0)
-    const highLevel = high.reduce((pre, cur) => pre + cur, 0)
+    a = round(p.map(low, 0, 255, 0.01, 0.03))
+    b = round(p.map(high, 0, 255, 0.05, 0.12))
 
-    console.log(lowLevel, highLevel, spectrum.length)
+    const targetVol = fft.getEnergy(10, 20000)
+    const level = p.map(
+      targetVol,
+      0,
+      200,
+      0,
+      4
+    )
+    const highWeight = p.map(high, 0, 225, 0, 0.3)
+    dt = p.constrain(round(level * (1 + highWeight)), 0, 5)
 
-    a = round(p.map(lowLevel, 0, 10000, 0.005, 0.01))
-    b = round(p.map(highLevel, 0, 10000, 0.005, 0.025))
-
-    // let a = 0.024
-    // let b = 0.078
-
-    p.text(`a/b: ${a}/${b}`, 100, 20)
+    const kick = kickDetector.update(fft)
+    if (kick.isBeat) {
+      mutation(p.random(0, canvas), p.random(0, canvas))
+    }
 
     const volume = p.map(Number(volumeSlider.value()), 0, 100, 0, 1) // 音量の変数を定義
     sound.setVolume(volume) // 音量を決定
-
     const speed = p.map(Number(speedSlider.value()), 0, sliderWidth, 0.5, 1.5) // 再生速度の変数を定義
-    p.fill('#fff')
-    p.text(speed, 400, 30)
     sound.rate(speed) // 再生速度を決定
   }
 
   p.preload = () => {
-    //  音源を定義する
 
-    sound = p.loadSound('./src/assets/planet-loop.mp3') // 音声データを読み込む
-    //  予めOpen Processingにアップロードする
-  }
-
-  const updateParams = () => {
-    const spectrum = fft.analyze() as number[]
-    const level = spectrum.reduce((pre, cur) => pre + cur, 0)
-    const calcedLevel = p.map(level, 0, 255 * 255, 0, 1)
-    dt = round(Math.min(calcedLevel, 5))
-
-    // levelHistory.shift()
-    // levelHistory.push(calcedLevel)
-    // const smoothLevel =
-    //   levelHistory.reduce((prev, cur) => prev + cur, 0) / levelHistory.length
-    // dt = round(Math.min(smoothLevel, 5))
-
-    p.fill(0)
-    p.textSize(16)
-    p.text(`dt: ${dt}`, 10, 20)
+    // sound = p.loadSound('./src/assets/planet-loop.mp3') // 音声データを読み込む
+    sound = p.loadSound('./src/assets/degital_love.m4a') // 音声データを読み込む
+    // sound = p.loadSound('./src/assets/one_more_time.m4a') // 音声データを読み込む
   }
 
   const display = () => {
     for (let x = 1; x <= n; x++) {
       for (let y = 1; y <= n; y++) {
         const { u, v } = grids[x][y]
-        p.fill(u * 255, 100, v * 255)
-        // p.fill(255 - (v[i][j] - u[i][j] / 2 + 0.5) * 100, 255, 255);
+        // p.fill(u * 255, 100, v * 255)
+        p.fill(255 - (p.constrain(p.map(v - u / 2, 0, 0.5, 0, 225), 0, 255)), 255, 255)
         p.rect((x - 1) * m, (y - 1) * m, m, m)
       }
     }
+    p.fill(0)
+    p.textSize(16)
+    p.text(`dt: ${dt}`, 10, 20)
+    p.text(`a / b: ${a} / ${b}`, 100, 20)
   }
 
   const update = () => {
@@ -142,7 +142,6 @@ export const sketch = (p: p5) => {
 
         const f = -currentU * currentV * currentV + a * (1 - currentU)
         const g = currentU * currentV * currentV - b * currentV
-
 
         next[x][y] = {
           u: round(currentU + (Cu * Du + f) * dt),
@@ -184,20 +183,27 @@ export const sketch = (p: p5) => {
   }
 
   p.mousePressed = () => {
-    const x = p.mouseX / m + 1
-    const y = p.mouseY / m + 1
+    mutation(p.mouseX, p.mouseY)
+  }
+
+  const mutation = (_x: number, _y: number) => {
+    const x = _x / m + 1
+    const y = _y / m + 1
     for (let i = 1; i <= n; i++) {
       for (let j = 1; j <= n; j++) {
         const r = Math.sqrt((x - i) * (x - i) + (y - j) * (y - j))
-        if (r < 8) {
+        if (r < 4) {
           grids[i][j] = {
-            u: 0.6 + p.random(-0.06, 0.06),
-            v: 0.2 + p.random(-0.02, 0.02),
+            // u: 0.6 + p.random(-0.06, 0.06),
+            // v: 0.2 + p.random(-0.02, 0.02),
+            u: 0,
+            v: 1,
           }
         }
       }
     }
     p.redraw()
+
   }
 
   p.keyPressed = () => {
@@ -207,6 +213,22 @@ export const sketch = (p: p5) => {
       p.loop()
     } else if (p.key == 'n') {
       p.noLoop()
+    }
+
+    if (p.keyCode === 32) {
+      togglePlay()
+
+    }
+
+  }
+
+  const togglePlay = () => {
+    if (sound.isPlaying()) {
+      sound.pause()
+      playButton.html('Play')
+    } else {
+      sound.loop()
+      playButton.html('Pause')
     }
   }
 }

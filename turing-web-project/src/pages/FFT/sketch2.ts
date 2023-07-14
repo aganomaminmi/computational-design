@@ -17,9 +17,9 @@ export const sketch = (p: p5) => {
     p.createCanvas(p.windowWidth, p.windowHeight)
 
     playButton = p.createButton('Play') // 再生ボタンの定義
-    playButton.size(100, 50)         // 再生ボタンの大きさを設定
     playButton.position(100, 20)    // 再生ボタンの位置を設定
     playButton.style('background-color', p.color(30))// 再生ボタンの位置を設定
+    playButton.style('padding', '10px, 20px')// 再生ボタンの位置を設定
     playButton.style('color', p.color(200))   // 再生ボタンの背景の色を設定
     playButton.mousePressed(playStop)// 再生ボタンを押した時の関数を設定
 
@@ -30,6 +30,7 @@ export const sketch = (p: p5) => {
     speedSlider.position(400, 50)// 再生速度のバーの位置を設定
 
     fft = new p5.FFT()// FFTを設定
+
 
   }
 
